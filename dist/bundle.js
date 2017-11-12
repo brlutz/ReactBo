@@ -129,10 +129,8 @@ var Board = /** @class */ (function (_super) {
     Board.prototype.render = function () {
         var _this = this;
         var _players = [];
-        if (this.state.PlayerState.length > 0) {
-            for (var i = 0; i < 5; i++) {
-                _players.push(this.renderPlayer(1));
-            }
+        for (var i = 0; i < this.state.PlayerState.length; i++) {
+            _players.push(this.renderPlayer(i));
         }
         return (React.createElement("div", null,
             React.createElement("button", { onClick: function () { return _this.shuffle(); } }, "Shuffle"),
@@ -147,13 +145,13 @@ var Board = /** @class */ (function (_super) {
         var _newDeck = [];
         for (var num = 1; num <= 12; num++) {
             for (var i = 1; i <= 12; i++) {
-                var _newCard = new Card({ CardNumber: num, CardId: (num + (i * .01)) });
+                var _newCard = ({ CardNumber: num, CardId: (num + (i * .01)) });
                 _newDeck.push(_newCard);
             }
         }
         // Populate the deck with another 18 wild cards
         for (var i = 0; i < 18; i++) {
-            var _skipBoCard = new Card({ CardNumber: 13, CardId: (13 + (i * .01)) });
+            var _skipBoCard = ({ CardNumber: 13, CardId: (13 + (i * .01)) });
             _newDeck.push(_skipBoCard);
         }
         console.log("inside shuffle");
@@ -206,9 +204,9 @@ var Hand = /** @class */ (function (_super) {
     }
     Hand.prototype.render = function () {
         var rows = [];
-        for (var i = 1; i <= Constants.HandSize; i++) {
+        for (var i = 0; i < Constants.HandSize; i++) {
             if (i < this.props.Hand.length)
-                rows.push(this.props.Hand[i]);
+                rows.push(React.createElement(Card, { CardId: this.props.Hand[i].CardId, CardNumber: this.props.Hand[i].CardNumber }));
         }
         return React.createElement("div", null, rows);
     };

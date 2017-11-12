@@ -1,10 +1,10 @@
 import * as React from "react";
 
 export interface IBoardProps { compiler: string; framework: string; }
-interface IPlayerProps {PlayerNumber: number; Hand: Card[]}
-interface IHandProps {Hand: Card[]}
+interface IPlayerProps {PlayerNumber: number; Hand: ICardModel[]}
+interface IHandProps {Hand: ICardModel[]}
 interface ICardModel {CardNumber: number; CardId: number, }
-interface IBoardState {Deck: Card[], PlayerState: IPlayerProps[]}
+interface IBoardState {Deck: ICardModel[], PlayerState: IPlayerProps[]}
 // 'HelloProps' describes the shape of props.
 // State is never set so we use the '{}' type.
 
@@ -37,13 +37,12 @@ export class Board extends React.Component< IBoardProps, IBoardState> {
     render() {
 
         var _players = [];
-        if(this.state.PlayerState.length > 0)
-        {
-        for(var i = 0; i < 5; i++) {
+
+        for(var i = 0; i < this.state.PlayerState.length; i++) {
             
-            _players.push(this.renderPlayer(1))
+            _players.push(this.renderPlayer(i))
         }
-        }
+
         return (
 
 <div>
@@ -73,17 +72,17 @@ export class Board extends React.Component< IBoardProps, IBoardState> {
     shuffle()
     {
 
-        let _newDeck: Card[] = [];
+        let _newDeck: ICardModel[] = [];
         for (var num = 1; num <= 12; num++) {
             for (var i = 1; i <= 12; i++) {
 
-                var _newCard = new Card({CardNumber: num, CardId: (num+ (i * .01))});
+                var _newCard: ICardModel = ({CardNumber: num, CardId: (num+ (i * .01))});
                 _newDeck.push(_newCard);
             }
         }
         // Populate the deck with another 18 wild cards
         for (var i = 0; i < 18; i++) {
-            var _skipBoCard = new Card({CardNumber: 13, CardId: (13+ (i * .01))});
+            var _skipBoCard: ICardModel = ({CardNumber: 13, CardId: (13+ (i * .01))});
             _newDeck.push(_skipBoCard);
         }
 
@@ -98,7 +97,7 @@ export class Board extends React.Component< IBoardProps, IBoardState> {
 
         var _newPlayerState: IPlayerProps[] = [];
         for(var i = 0; i < Constants.PlayerCount; i++) {
-            var _hand: Card[] = [];
+            var _hand: ICardModel[] = [];
             var _usedCards: number;
             for(var j = 0; j < Constants.HandSize; j++)
             {
@@ -152,9 +151,11 @@ class Hand extends React.Component<IHandProps, any>
     render()
     {
         var rows = [];
-        for (var i=1; i <= Constants.HandSize; i++) {
+        for (var i=0; i < Constants.HandSize; i++) {
             if(i < this.props.Hand.length)
-            rows.push(this.props.Hand[i]);
+            rows.push(<Card
+             CardId = {this.props.Hand[i].CardId}
+              CardNumber = {this.props.Hand[i].CardNumber}/>);
         }
         return <div>{rows}</div>;
 
