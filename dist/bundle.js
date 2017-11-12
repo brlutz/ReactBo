@@ -134,9 +134,11 @@ var Board = /** @class */ (function (_super) {
         }
         return (React.createElement("div", null,
             React.createElement("button", { onClick: function () { return _this.shuffle(); } }, "Shuffle"),
-            React.createElement("div", { className: "container" }, _players),
+            React.createElement("div", { className: "container" }),
             React.createElement("div", { className: "row" },
-                React.createElement("div", { className: "col-md-2 col-md-offset-5" }, "veter")),
+                React.createElement("div", { className: "col-md-4 col-md-offset-4" },
+                    _players,
+                    " ")),
             React.createElement("div", { className: "container" },
                 React.createElement("div", null, "This is where the play piles are"))));
     };

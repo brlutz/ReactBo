@@ -48,11 +48,11 @@ export class Board extends React.Component< IBoardProps, IBoardState> {
 <div>
     <button onClick = {() => this.shuffle()}>Shuffle</button>
 <div className="container">
-              {_players}  
+               
 
         </div>
         <div className="row">
-        <div className="col-md-2 col-md-offset-5">veter</div>
+        <div className="col-md-4 col-md-offset-4">{_players} </div>
         </div>
         <div className = "container">
 
