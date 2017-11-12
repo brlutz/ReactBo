@@ -224,7 +224,7 @@ var Card = /** @class */ (function (_super) {
     Card.prototype.render = function () {
         return (React.createElement("div", { key: this.props.CardId, className: "card" + this.getCardColor() },
             React.createElement("h4", null,
-                React.createElement("b", null, this.props.CardNumber))));
+                React.createElement("b", null, this.getCardName()))));
     };
     Card.prototype.getCardColor = function () {
         var _color = "";
@@ -241,6 +241,17 @@ var Card = /** @class */ (function (_super) {
             _color = " orange";
         }
         return _color;
+    };
+    Card.prototype.getCardName = function () {
+        if (this.props.CardNumber != 13) {
+            return this.props.CardNumber.toString();
+        }
+        else if (this.props.CardNumber === 13) {
+            return "WILD";
+        }
+        else {
+            return "ERROR CARD";
+        }
     };
     return Card;
 }(React.Component));

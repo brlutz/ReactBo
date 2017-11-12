@@ -181,7 +181,7 @@ class Card extends React.Component<ICardModel, ICardModel>
 
         return (
         <div key= {this.props.CardId} className={"card"+this.getCardColor()}>
-              <h4><b>{this.props.CardNumber}</b></h4> 
+              <h4><b>{this.getCardName()}</b></h4> 
           </div>
         )
     }
@@ -207,5 +207,21 @@ class Card extends React.Component<ICardModel, ICardModel>
         }
 
         return _color;
+    }
+
+    getCardName()
+    {
+        if(this.props.CardNumber != 13)
+        {
+            return this.props.CardNumber.toString();
+        }
+        else if (this.props.CardNumber === 13)
+        {
+            return "WILD";
+        }
+        else
+        {
+            return "ERROR CARD"
+        }
     }
 }
