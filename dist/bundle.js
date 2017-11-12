@@ -108,6 +108,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var React = __webpack_require__(0);
 // 'HelloProps' describes the shape of props.
 // State is never set so we use the '{}' type.
+var Constants = {
+    PlayerCount: 4,
+    HandSize: 5,
+};
+function GetRandomCardPosition(DeckSize) {
+    return Math.floor(Math.random() * (DeckSize));
+}
 var Board = /** @class */ (function (_super) {
     __extends(Board, _super);
     function Board(props) {
@@ -115,46 +122,60 @@ var Board = /** @class */ (function (_super) {
         _this.state =
             {
                 Deck: [],
+                PlayerState: [],
             };
         return _this;
     }
     Board.prototype.render = function () {
         var _this = this;
+        var _players = [];
+        if (this.state.PlayerState.length > 0) {
+            for (var i = 0; i < 5; i++) {
+                _players.push(this.renderPlayer(1));
+            }
+        }
         return (React.createElement("div", null,
             React.createElement("button", { onClick: function () { return _this.shuffle(); } }, "Shuffle"),
-            React.createElement("div", { className: "container" },
-                this.renderPlayer(1),
-                this.renderPlayer(2),
-                this.renderPlayer(3),
-                this.renderPlayer(4)),
+            React.createElement("div", { className: "container" }, _players),
             React.createElement("div", { className: "container" },
                 React.createElement("div", { className: "col-sm-4 col-sm-offset-4" }, "This is where the play piles are"))));
     };
     Board.prototype.renderPlayer = function (i) {
-        return React.createElement(Player, { playerNumber: i });
+        return React.createElement(Player, { PlayerNumber: this.state.PlayerState[i].PlayerNumber, Hand: this.state.PlayerState[i].Hand });
     };
     Board.prototype.shuffle = function () {
-        var cards = [];
+        var _newDeck = [];
         for (var num = 1; num <= 12; num++) {
-            for (var i = 1; i < 13; i++) {
-                var _newCard = new Card({ cardNumber: num, cardId: (num + (i * .01)) });
-                cards.push(_newCard);
+            for (var i = 1; i <= 12; i++) {
+                var _newCard = new Card({ CardNumber: num, CardId: (num + (i * .01)) });
+                _newDeck.push(_newCard);
             }
         }
         // Populate the deck with another 18 wild cards
         for (var i = 0; i < 18; i++) {
-            var _skipBoCard = new Card({ cardNumber: 13, cardId: (13 + (i * .01)) });
-            cards.push(_skipBoCard);
+            var _skipBoCard = new Card({ CardNumber: 13, CardId: (13 + (i * .01)) });
+            _newDeck.push(_skipBoCard);
         }
         console.log("inside shuffle");
-        for (var i = 0; i < cards.length; i++) {
-            var first = (Math.random() * 162) + 1;
-            var second = (Math.random() * 162) + 1;
-            var firstCard = cards[first];
-            cards[first] = cards[second];
-            cards[second] = firstCard;
+        for (var i = 0; i < _newDeck.length; i++) {
+            var first = Math.floor(Math.random() * 162) + 1;
+            var second = Math.floor(Math.random() * 162) + 1;
+            var firstCard = _newDeck[first];
+            _newDeck[first] = _newDeck[second];
+            _newDeck[second] = firstCard;
         }
-        this.setState({ Deck: cards });
+        var _newPlayerState = [];
+        for (var i = 0; i < Constants.PlayerCount; i++) {
+            var _hand = [];
+            var _usedCards;
+            for (var j = 0; j < Constants.HandSize; j++) {
+                var _number = GetRandomCardPosition(_newDeck.length);
+                _hand.push(_newDeck[_number]);
+                _newDeck.splice(_number, 1);
+            }
+            _newPlayerState.push({ PlayerNumber: i + 1, Hand: _hand });
+        }
+        this.setState({ Deck: _newDeck, PlayerState: _newPlayerState });
         return this;
     };
     return Board;
@@ -170,10 +191,10 @@ var Player = /** @class */ (function (_super) {
             React.createElement("div", { className: "col-sm-4" },
                 React.createElement("h3", null,
                     "This is player ",
-                    this.props.playerNumber),
+                    this.props.PlayerNumber),
                 React.createElement("div", null,
                     " Cards in hand",
-                    React.createElement(Hand, { hand: this.props.Hand })),
+                    React.createElement(Hand, { Hand: this.props.Hand })),
                 React.createElement("div", null, " Discard Piles "))));
     };
     return Player;
@@ -181,18 +202,13 @@ var Player = /** @class */ (function (_super) {
 var Hand = /** @class */ (function (_super) {
     __extends(Hand, _super);
     function Hand(props) {
-        var _this = _super.call(this, props) || this;
-        _this.state =
-            {
-                Hand: [],
-            };
-        return _this;
+        return _super.call(this, props) || this;
     }
     Hand.prototype.render = function () {
         var rows = [];
-        for (var i = 1; i < 6; i++) {
-            if (i < this.state.Hand.le)
-                rows.push(React.createElement(Card, { cardNumber: i, cardId: i }));
+        for (var i = 1; i <= Constants.HandSize; i++) {
+            if (i < this.props.Hand.length)
+                rows.push(this.props.Hand[i]);
         }
         return React.createElement("div", null, rows);
     };
@@ -204,23 +220,23 @@ var Card = /** @class */ (function (_super) {
         return _super.call(this, props) || this;
     }
     Card.prototype.render = function () {
-        return (React.createElement("div", { key: this.props.cardId, className: "card" + this.getCardColor() },
+        return (React.createElement("div", { key: this.props.CardId, className: "card" + this.getCardColor() },
             React.createElement("div", { className: "container" },
                 React.createElement("h4", null,
-                    React.createElement("b", null, this.props.cardNumber)))));
+                    React.createElement("b", null, this.props.CardNumber)))));
     };
     Card.prototype.getCardColor = function () {
         var color = "";
-        if (this.props.cardNumber <= 4) {
+        if (this.props.CardNumber <= 4) {
             color = " blue";
         }
-        else if (this.props.cardNumber <= 8) {
+        else if (this.props.CardNumber <= 8) {
             color = " green";
         }
-        else if (this.props.cardNumber <= 12) {
+        else if (this.props.CardNumber <= 12) {
             color = " red";
         }
-        else if (this.props.cardNumber == 13) {
+        else if (this.props.CardNumber == 13) {
             color = " orange";
         }
         return color;
