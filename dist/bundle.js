@@ -135,8 +135,10 @@ var Board = /** @class */ (function (_super) {
         return (React.createElement("div", null,
             React.createElement("button", { onClick: function () { return _this.shuffle(); } }, "Shuffle"),
             React.createElement("div", { className: "container" }, _players),
+            React.createElement("div", { className: "row" },
+                React.createElement("div", { className: "col-md-2 col-md-offset-5" }, "veter")),
             React.createElement("div", { className: "container" },
-                React.createElement("div", { className: "col-sm-4 col-sm-offset-4" }, "This is where the play piles are"))));
+                React.createElement("div", null, "This is where the play piles are"))));
     };
     Board.prototype.renderPlayer = function (i) {
         return React.createElement(Player, { PlayerNumber: this.state.PlayerState[i].PlayerNumber, Hand: this.state.PlayerState[i].Hand });
@@ -186,7 +188,7 @@ var Player = /** @class */ (function (_super) {
     }
     Player.prototype.render = function () {
         return (React.createElement("div", { className: "row" },
-            React.createElement("div", { className: "col-sm-4" },
+            React.createElement("div", { className: "col-sm-12" },
                 React.createElement("h3", null,
                     "This is player ",
                     this.props.PlayerNumber),
@@ -219,9 +221,8 @@ var Card = /** @class */ (function (_super) {
     }
     Card.prototype.render = function () {
         return (React.createElement("div", { key: this.props.CardId, className: "card" + this.getCardColor() },
-            React.createElement("div", { className: "container" },
-                React.createElement("h4", null,
-                    React.createElement("b", null, this.props.CardNumber)))));
+            React.createElement("h4", null,
+                React.createElement("b", null, this.props.CardNumber))));
     };
     Card.prototype.getCardColor = function () {
         var color = "";

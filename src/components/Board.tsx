@@ -51,8 +51,12 @@ export class Board extends React.Component< IBoardProps, IBoardState> {
               {_players}  
 
         </div>
+        <div className="row">
+        <div className="col-md-2 col-md-offset-5">veter</div>
+        </div>
         <div className = "container">
-            <div className="col-sm-4 col-sm-offset-4">
+
+            <div>
             This is where the play piles are 
             </div>
         </div>
@@ -125,7 +129,7 @@ class Player extends React.Component<IPlayerProps, any> {
     render() {
      return(
       <div className="row">
-        <div className="col-sm-4">
+        <div className="col-sm-12">
           <h3>This is player {this.props.PlayerNumber}</h3>
           <div> Cards in hand 
               
@@ -177,9 +181,7 @@ class Card extends React.Component<ICardModel, ICardModel>
 
         return (
         <div key= {this.props.CardId} className={"card"+this.getCardColor()}>
-            <div className="container">
               <h4><b>{this.props.CardNumber}</b></h4> 
-            </div>
           </div>
         )
     }
