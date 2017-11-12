@@ -160,11 +160,11 @@ var Board = /** @class */ (function (_super) {
         }
         console.log("inside shuffle");
         for (var i = 0; i < _newDeck.length; i++) {
-            var first = Math.floor(Math.random() * 162) + 1;
-            var second = Math.floor(Math.random() * 162) + 1;
-            var firstCard = _newDeck[first];
-            _newDeck[first] = _newDeck[second];
-            _newDeck[second] = firstCard;
+            var _first = Math.floor(Math.random() * 162) + 1;
+            var _second = Math.floor(Math.random() * 162) + 1;
+            var _firstCard = _newDeck[_first];
+            _newDeck[_first] = _newDeck[_second];
+            _newDeck[_second] = _firstCard;
         }
         var _newPlayerState = [];
         for (var i = 0; i < Constants.PlayerCount; i++) {
@@ -207,12 +207,12 @@ var Hand = /** @class */ (function (_super) {
         return _super.call(this, props) || this;
     }
     Hand.prototype.render = function () {
-        var rows = [];
+        var _rows = [];
         for (var i = 0; i < Constants.HandSize; i++) {
             if (i < this.props.Hand.length)
-                rows.push(React.createElement(Card, { CardId: this.props.Hand[i].CardId, CardNumber: this.props.Hand[i].CardNumber }));
+                _rows.push(React.createElement(Card, { CardId: this.props.Hand[i].CardId, CardNumber: this.props.Hand[i].CardNumber }));
         }
-        return React.createElement("div", null, rows);
+        return React.createElement("div", null, _rows);
     };
     return Hand;
 }(React.Component));
@@ -227,20 +227,20 @@ var Card = /** @class */ (function (_super) {
                 React.createElement("b", null, this.props.CardNumber))));
     };
     Card.prototype.getCardColor = function () {
-        var color = "";
+        var _color = "";
         if (this.props.CardNumber <= 4) {
-            color = " blue";
+            _color = " blue";
         }
         else if (this.props.CardNumber <= 8) {
-            color = " green";
+            _color = " green";
         }
         else if (this.props.CardNumber <= 12) {
-            color = " red";
+            _color = " red";
         }
         else if (this.props.CardNumber == 13) {
-            color = " orange";
+            _color = " orange";
         }
-        return color;
+        return _color;
     };
     return Card;
 }(React.Component));

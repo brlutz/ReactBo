@@ -92,11 +92,11 @@ export class Board extends React.Component< IBoardProps, IBoardState> {
 
         console.log("inside shuffle");
         for (var i = 0; i < _newDeck.length; i++) {
-            var first = Math.floor(Math.random() * 162) + 1;
-            var second = Math.floor(Math.random() * 162) + 1;
-            var firstCard = _newDeck[first];
-            _newDeck[first] = _newDeck[second];
-            _newDeck[second] = firstCard;
+            var _first = Math.floor(Math.random() * 162) + 1;
+            var _second = Math.floor(Math.random() * 162) + 1;
+            var _firstCard = _newDeck[_first];
+            _newDeck[_first] = _newDeck[_second];
+            _newDeck[_second] = _firstCard;
         }
 
         var _newPlayerState: IPlayerProps[] = [];
@@ -154,14 +154,14 @@ class Hand extends React.Component<IHandProps, any>
 
     render()
     {
-        var rows = [];
+        var _rows = [];
         for (var i=0; i < Constants.HandSize; i++) {
             if(i < this.props.Hand.length)
-            rows.push(<Card
+            _rows.push(<Card
              CardId = {this.props.Hand[i].CardId}
               CardNumber = {this.props.Hand[i].CardNumber}/>);
         }
-        return <div>{rows}</div>;
+        return <div>{_rows}</div>;
 
 
     }
@@ -188,24 +188,24 @@ class Card extends React.Component<ICardModel, ICardModel>
 
     getCardColor()
     {
-        let color = "";
+        let _color = "";
         if(this.props.CardNumber <= 4)
         {
-            color = " blue";
+            _color = " blue";
         }
         else if(this.props.CardNumber <= 8)
         {
-            color = " green";
+            _color = " green";
         }
         else if(this.props.CardNumber <=12)
         {
-            color = " red";
+            _color = " red";
         }
         else if(this.props.CardNumber == 13)
         {
-            color = " orange";
+            _color = " orange";
         }
 
-        return color;
+        return _color;
     }
 }
