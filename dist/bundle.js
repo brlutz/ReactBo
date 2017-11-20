@@ -160,44 +160,28 @@ var Board = /** @class */ (function (_super) {
             var _skipBoCard = ({ CardNumber: 13, CardId: (13 + (i * .01)) });
             _newDeck.push(_skipBoCard);
         }
+        //console.log("inside shuffle", _newDeck);
         for (var i = 0; i < _newDeck.length; i++) {
-            if (_newDeck[i] == undefined) {
-                debugger;
-            }
-        }
-        console.log("inside shuffle", _newDeck);
-        for (var i = 0; i < _newDeck.length; i++) {
-            var _first = Math.floor(Math.random() * 162) + 1;
-            var _second = Math.floor(Math.random() * 162) + 1;
+            var _first = Math.floor(Math.random() * 162);
+            var _second = Math.floor(Math.random() * 162);
             var _firstCard = _newDeck[_first];
             var _secondCard = _newDeck[_second];
-            if (_firstCard == undefined || _secondCard == undefined) {
-                debugger;
-            }
             _newDeck[_first] = _secondCard;
             _newDeck[_second] = _firstCard;
-            for (var i = 0; i < _newDeck.length; i++) {
-                if (_newDeck[i] == undefined) {
-                    debugger;
-                }
-            }
         }
-        console.log("after shuffle", _newDeck);
+        //console.log("after shuffle", _newDeck);
         var _newPlayerState = [];
         for (var i = 0; i < Constants.PlayerCount; i++) {
             var _hand = [];
             var _usedCards;
             for (var j = 0; j < Constants.HandSize; j++) {
                 var _number = GetRandomCardPosition(_newDeck.length);
-                if (_newDeck[j] == undefined) {
-                    debugger;
-                }
                 _hand.push(_newDeck[_number]);
                 _newDeck.splice(_number, 1);
             }
             _newPlayerState.push({ PlayerNumber: i + 1, Hand: _hand, DiscardPile: [] });
         }
-        console.log("this is the playerstate", _newPlayerState);
+        //console.log("this is the playerstate", _newPlayerState);
         this.setState({ Deck: _newDeck, PlayerState: _newPlayerState });
         return this;
     };
@@ -256,9 +240,6 @@ var Hand = /** @class */ (function (_super) {
     Hand.prototype.render = function () {
         var _rows = [];
         for (var i = 0; i < Constants.HandSize; i++) {
-            if (this.props.Hand[i] == undefined) {
-                debugger;
-            }
             if (i < this.props.Hand.length) {
                 _rows.push(React.createElement(Card, { CardId: this.props.Hand[i].CardId, CardNumber: this.props.Hand[i].CardNumber }));
             }
