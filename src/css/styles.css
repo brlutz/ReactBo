@@ -11,6 +11,12 @@
 .card.orange {
     background-color: #FFA500;
 }
+.card.empty 
+{
+    outline-style: dotted;
+    box-shadow: 0 0 0 0;
+    color: #B3B3B3;
+}
 
 /* On mouse-over, add a deeper shadow */
 .card:hover {

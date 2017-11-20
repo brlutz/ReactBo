@@ -111,6 +111,7 @@ var React = __webpack_require__(0);
 var Constants = {
     PlayerCount: 4,
     HandSize: 5,
+    DiscardPileSize: 4,
 };
 function GetRandomCardPosition(DeckSize) {
     return Math.floor(Math.random() * (DeckSize));
@@ -136,14 +137,15 @@ var Board = /** @class */ (function (_super) {
             React.createElement("button", { onClick: function () { return _this.shuffle(); } }, "Shuffle"),
             React.createElement("div", { className: "container" }),
             React.createElement("div", { className: "row" },
-                React.createElement("div", { className: "col-md-4 col-md-offset-4" },
+                React.createElement("div", { className: "col-md-1" }),
+                React.createElement("div", { className: "col-md-4" },
                     _players,
                     " ")),
             React.createElement("div", { className: "container" },
                 React.createElement("div", null, "This is where the play piles are"))));
     };
     Board.prototype.renderPlayer = function (i) {
-        return React.createElement(Player, { PlayerNumber: this.state.PlayerState[i].PlayerNumber, Hand: this.state.PlayerState[i].Hand });
+        return React.createElement(Player, { PlayerNumber: this.state.PlayerState[i].PlayerNumber, Hand: this.state.PlayerState[i].Hand, DiscardPile: this.state.PlayerState[i].DiscardPile });
     };
     Board.prototype.shuffle = function () {
         var _newDeck = [];
@@ -175,7 +177,7 @@ var Board = /** @class */ (function (_super) {
                 _hand.push(_newDeck[_number]);
                 _newDeck.splice(_number, 1);
             }
-            _newPlayerState.push({ PlayerNumber: i + 1, Hand: _hand });
+            _newPlayerState.push({ PlayerNumber: i + 1, Hand: _hand, DiscardPile: [] });
         }
         this.setState({ Deck: _newDeck, PlayerState: _newPlayerState });
         return this;
@@ -197,9 +199,35 @@ var Player = /** @class */ (function (_super) {
                 React.createElement("div", null,
                     " Cards in hand",
                     React.createElement(Hand, { Hand: this.props.Hand })),
-                React.createElement("div", null, " Discard Piles "))));
+                React.createElement("div", null,
+                    " ",
+                    React.createElement(DiscardPile, { DiscardPile: this.props.DiscardPile }),
+                    " "))));
     };
     return Player;
+}(React.Component));
+var DiscardPile = /** @class */ (function (_super) {
+    __extends(DiscardPile, _super);
+    function DiscardPile(props) {
+        return _super.call(this, props) || this;
+    }
+    DiscardPile.prototype.render = function () {
+        var _rows = [];
+        for (var i = 0; i < Constants.DiscardPileSize; i++) {
+            if (i < this.props.DiscardPile.length) {
+                _rows.push(React.createElement(Card, { CardId: this.props.DiscardPile[i].CardId, CardNumber: this.props.DiscardPile[i].CardNumber }));
+            }
+            else {
+                _rows.push(React.createElement(Card, { CardId: i, CardNumber: 0 }));
+            }
+        }
+        return (React.createElement("div", null,
+            "Discard Piles ",
+            React.createElement("br", null),
+            " ",
+            _rows));
+    };
+    return DiscardPile;
 }(React.Component));
 var Hand = /** @class */ (function (_super) {
     __extends(Hand, _super);
@@ -212,7 +240,7 @@ var Hand = /** @class */ (function (_super) {
             if (i < this.props.Hand.length)
                 _rows.push(React.createElement(Card, { CardId: this.props.Hand[i].CardId, CardNumber: this.props.Hand[i].CardNumber }));
         }
-        return React.createElement("div", null, _rows);
+        return (React.createElement("div", null, _rows));
     };
     return Hand;
 }(React.Component));
@@ -228,7 +256,10 @@ var Card = /** @class */ (function (_super) {
     };
     Card.prototype.getCardColor = function () {
         var _color = "";
-        if (this.props.CardNumber <= 4) {
+        if (this.props.CardNumber == 0) {
+            _color = " empty";
+        }
+        else if (this.props.CardNumber <= 4) {
             _color = " blue";
         }
         else if (this.props.CardNumber <= 8) {
@@ -243,7 +274,10 @@ var Card = /** @class */ (function (_super) {
         return _color;
     };
     Card.prototype.getCardName = function () {
-        if (this.props.CardNumber != 13) {
+        if (this.props.CardNumber == 0) {
+            return " ";
+        }
+        else if (this.props.CardNumber != 13) {
             return this.props.CardNumber.toString();
         }
         else if (this.props.CardNumber === 13) {

@@ -1,10 +1,11 @@
 import * as React from "react";
 
 export interface IBoardProps { compiler: string; framework: string; }
-interface IPlayerProps {PlayerNumber: number; Hand: ICardModel[]}
+interface IPlayerProps {PlayerNumber: number; Hand: ICardModel[]; DiscardPile: ICardModel[]}
 interface IHandProps {Hand: ICardModel[]}
 interface ICardModel {CardNumber: number; CardId: number, }
 interface IBoardState {Deck: ICardModel[], PlayerState: IPlayerProps[]}
+interface IDiscardPileProps {DiscardPile: ICardModel[]}
 // 'HelloProps' describes the shape of props.
 // State is never set so we use the '{}' type.
 
@@ -12,6 +13,7 @@ const Constants =
 {
     PlayerCount: 4,
     HandSize: 5,
+    DiscardPileSize: 4,
 }
 
 
@@ -52,7 +54,8 @@ export class Board extends React.Component< IBoardProps, IBoardState> {
 
         </div>
         <div className="row">
-        <div className="col-md-4 col-md-offset-4">{_players} </div>
+        <div className="col-md-1"></div>
+        <div className="col-md-4">{_players} </div>
         </div>
         <div className = "container">
 
@@ -68,7 +71,8 @@ export class Board extends React.Component< IBoardProps, IBoardState> {
     {
         return <Player
             PlayerNumber = {this.state.PlayerState[i].PlayerNumber}
-            Hand = {this.state.PlayerState[i].Hand}/>
+            Hand = {this.state.PlayerState[i].Hand}
+            DiscardPile = {this.state.PlayerState[i].DiscardPile}/>
     }
 
 
@@ -110,7 +114,7 @@ export class Board extends React.Component< IBoardProps, IBoardState> {
                 _newDeck.splice(_number, 1);
             }
 
-            _newPlayerState.push({PlayerNumber: i+1, Hand: _hand});
+            _newPlayerState.push({PlayerNumber: i+1, Hand: _hand, DiscardPile: []});
 
         }
 
@@ -132,17 +136,42 @@ class Player extends React.Component<IPlayerProps, any> {
         <div className="col-sm-12">
           <h3>This is player {this.props.PlayerNumber}</h3>
           <div> Cards in hand 
-              
                   <Hand Hand={this.props.Hand}/>
-              
           </div>
-          
-          <div> Discard Piles </div>
+          <div> <DiscardPile DiscardPile= {this.props.DiscardPile}/> </div>
         </div>
       </div>
       )
     }
 
+}
+
+class DiscardPile extends React.Component<IDiscardPileProps, any>
+{
+    constructor(props: any) {
+        super(props);
+    }
+    render() {
+
+        var _rows = [];
+        for (var i=0; i < Constants.DiscardPileSize; i++) {
+            if(i < this.props.DiscardPile.length) {
+            _rows.push(<Card
+             CardId = {this.props.DiscardPile[i].CardId}
+              CardNumber = {this.props.DiscardPile[i].CardNumber}/>);
+            }
+            else {
+                _rows.push(<Card
+             CardId = {i}
+              CardNumber = {0}/>);
+            }
+        }
+
+        return (
+            <div>Discard Piles <br/> {_rows}</div>
+                
+        )
+    }
 }
 
 class Hand extends React.Component<IHandProps, any>
@@ -161,7 +190,8 @@ class Hand extends React.Component<IHandProps, any>
              CardId = {this.props.Hand[i].CardId}
               CardNumber = {this.props.Hand[i].CardNumber}/>);
         }
-        return <div>{_rows}</div>;
+        return (<div>{_rows}</div>)
+            
 
 
     }
@@ -189,7 +219,11 @@ class Card extends React.Component<ICardModel, ICardModel>
     getCardColor()
     {
         let _color = "";
-        if(this.props.CardNumber <= 4)
+        if(this.props.CardNumber == 0)
+        {
+            _color = " empty";
+        }
+        else if(this.props.CardNumber <= 4)
         {
             _color = " blue";
         }
@@ -211,7 +245,11 @@ class Card extends React.Component<ICardModel, ICardModel>
 
     getCardName()
     {
-        if(this.props.CardNumber != 13)
+        if (this.props.CardNumber == 0)
+        {
+            return " ";
+        }
+        else if(this.props.CardNumber != 13)
         {
             return this.props.CardNumber.toString();
         }
@@ -221,7 +259,7 @@ class Card extends React.Component<ICardModel, ICardModel>
         }
         else
         {
-            return "ERROR CARD"
+            return "ERROR CARD";
         }
     }
 }
